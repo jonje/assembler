@@ -1,0 +1,26 @@
+; Load the value of the register that controls pin 47
+MOVW R4, 0 	;This should get stripped out
+MOVT R4, 0x3F20
+ADD R4, R2, 0x10
+LDR R2, R3
+;ORR  R3, R3, 0x200000
+STR R2, R3
+MOVW R2, 0x8000
+ADD R4, R3, 0x20
+ADD R3, R5, 0xC
+STR R3, R2
+; This is the delay
+MOVW R4, 0
+MOVT R4, 0x0002
+SUBS R4, R4, 1
+B NE -3
+; End of delay
+; Turn off light
+STR R5, R2
+; This is the delay
+MOVW R4, 0
+MOVT R4, 0x0002
+SUBS R4, R4, 1
+B NE -3
+; End of delay
+B AL -12
