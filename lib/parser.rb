@@ -8,8 +8,9 @@ class Parser
     @conditions = {'AL' => '1110', 'NE' => '0001', 'EQ' => '0000'}
   end
 
-  def assemble(tokens)
+  def assemble(tokens, command_number)
     @tokens = tokens
+    @command_number = command_number
     binary_command = ''
 
     command = get_command
@@ -21,7 +22,16 @@ class Parser
 
       binary_command << base
 
+      if label_exists?
+        label_value = get_label.value
+        temp = label_value - @command_number
+        puts "#{temp} is offset value"
+        token = Token.new(TokenType::OFFSET, temp.to_s)
+        @tokens.push(token)
+      end
+
       offset = get_offset(get_bit_amount(command))
+
       puts "Offset is #{offset}"
 
       registers = get_registers
@@ -139,10 +149,9 @@ class Parser
 
         elsif value.match(/[0-9]*x[0-9]*/)
           result = value.to_i(16)
-          puts "reached good spot #{result}"
+
         else
           result = value.to_i
-          puts "Bad should not reach here"
         end
 
         break
@@ -201,6 +210,29 @@ class Parser
       end
     end
     results
+  end
+
+  def get_label
+    result = nil
+    @tokens.each do |token|
+      if token.type == TokenType::LABEL
+        result = token
+        break
+      end
+    end
+    result
+  end
+
+  def label_exists?
+    result = nil
+    @tokens.each do |token|
+      result = token.type == TokenType::LABEL
+
+      if result
+        break
+      end
+    end
+    result
   end
 
 end

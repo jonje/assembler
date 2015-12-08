@@ -7,4 +7,5 @@ class TokenType < Enum
   self.add_item(:LINE_NUMBER, 'line_number')
   self.add_item(:OFFSET, 'offset')
   self.add_item(:CONDITION, 'condition')
+	self.add_item(:LABEL, 'label')
 end

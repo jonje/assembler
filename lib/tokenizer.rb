@@ -20,6 +20,8 @@ class Tokenizer
 		@state = State::INITIAL
     @commands = %w(MOVW MOVT ADD LDR ORR STR B)
     @conditions = %w(AL NE EQ)
+    @command_number = 0
+    @labels = Hash.new
 
 	end
 
@@ -38,19 +40,25 @@ class Tokenizer
         puts 'Stripping out comment'
 			elsif (@state != State::COMMENT) && ((is_alpha_numeric? character) || (is_white_space? character))
         string << character
-
 			end
 
     end
 
     puts "Command #{string}" unless string.empty?
+    @command_number += 1 unless string.empty?
 
     components = string.split ' '
 
     components.each do |component|
-      if is_label? component
-        puts "#{component} is a label for line number #{@line_number}"
-        labels[component] = @line_number
+      if is_label_declaration? component
+        puts "#{component} is a label for command number #{@command_number}"
+        component.gsub!(':', '')
+        @labels[component] = @command_number
+
+      elsif is_label? component
+        puts "#{component} is using the label"
+        token = Token.new(TokenType::LABEL, @labels[component])
+        tokens.push(token)
 
       elsif is_command? component
         puts "#{component} is a valid command"
@@ -74,7 +82,11 @@ class Tokenizer
     end
 
     parser = Parser.new
-    parser.assemble(tokens)
+    @state = State::INITIAL
+    @labels.each do |label|
+      puts label
+    end
+    parser.assemble(tokens, @command_number)
 
 	end
 
@@ -112,8 +124,12 @@ class Tokenizer
     /[0-9]*x[0-9]*|-*[0-9]+/.match(symbol)
   end
 
-  def is_label?(symbol)
+  def is_label_declaration?(symbol)
     /[a-z]*:/.match(symbol)
+  end
+
+  def is_label?(symbol)
+    @labels[symbol]
   end
 
   def is_condition?(symbol)

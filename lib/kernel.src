@@ -18,9 +18,9 @@ B NE -3
 ; Turn off light
 STR R5, R2
 ; This is the delay
-MOVW R4, 0
+loop: MOVW R4, 0
 MOVT R4, 0x0002
 SUBS R4, R4, 1
-B NE -3
+B NE loop
 ; End of delay
 B AL -12

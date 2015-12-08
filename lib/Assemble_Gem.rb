@@ -3,23 +3,22 @@ require_relative 'tokenizer'
 
 module AssembleGem
 
-
-
   # Your code goes here...
   # Read in file and open it.
   file = File.open(ARGV[0],"r+").read()
 
   binary = []
   hexs = []
+  tokenizer = Tokenizer.new
 
 # Loop through each line
   file.each_line do |line|
-    tokenizer = Tokenizer.new
     #tokenize each line of code
     binary_representation = tokenizer.tokenize(line)
 
     if !binary_representation.empty?
       binary.push(binary_representation)
+
     end
 
   end
@@ -36,6 +35,16 @@ module AssembleGem
   hexs.each do |binary|
     puts binary
   end
+
+  puts 'Writing to file'
+  File.open(File.expand_path('~') + '/Desktop/kernel7.txt', 'wb') do |file|
+    hexs.each do |hex|
+      temp = hex.scan(/.{2}/)
+      temp.each {|bit| file << bit}
+
+    end
+  end
+  puts 'Done writing to file'
 
 
 end
