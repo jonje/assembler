@@ -15,13 +15,13 @@ class Tokenizer
     reverse
   end
 
-	def initialize
+	def initialize(labels)
 		@line_number = 0
 		@state = State::INITIAL
-    @commands = %w(MOVW MOVT ADD LDR ORR STR B)
+    @commands = %w(MOVW MOVT MOVR ADD LDR ORR STR BL B)
     @conditions = %w(AL NE EQ)
     @command_number = 0
-    @labels = Hash.new
+    @labels = labels
 
 	end
 
@@ -29,7 +29,6 @@ class Tokenizer
 		@line_number += 1
 		string = String.new
     tokens = []
-    labels = Hash.new()
 
     tokens.push(Token.new(TokenType::LINE_NUMBER, @line_number))
     # Assemble command string stripping out comments
@@ -83,9 +82,6 @@ class Tokenizer
 
     parser = Parser.new
     @state = State::INITIAL
-    @labels.each do |label|
-      puts label
-    end
     parser.assemble(tokens, @command_number)
 
 	end

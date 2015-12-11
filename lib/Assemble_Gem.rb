@@ -1,5 +1,6 @@
 require_relative "Assemble_Gem/version"
 require_relative 'tokenizer'
+require_relative 'preprocessor'
 
 module AssembleGem
 
@@ -9,9 +10,17 @@ module AssembleGem
 
   binary = []
   hexs = []
-  tokenizer = Tokenizer.new
+  preprocessor = Preprocessor.new
 
-# Loop through each line
+
+  # Preprocess to get all the labels before hand.
+  file.each_line do |line|
+    preprocessor.process line
+  end
+
+  labels = preprocessor.get_labels
+  tokenizer = Tokenizer.new(labels)
+  # Loop through each line tokenize each line
   file.each_line do |line|
     #tokenize each line of code
     binary_representation = tokenizer.tokenize(line)

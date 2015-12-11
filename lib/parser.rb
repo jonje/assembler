@@ -14,6 +14,7 @@ class Parser
     binary_command = ''
 
     command = get_command
+    puts "Command is #{command}"
     if command != nil
       cond = get_condition
 
@@ -25,6 +26,10 @@ class Parser
       if label_exists?
         label_value = get_label.value
         temp = label_value - @command_number
+        if temp > 0
+          temp -= 1
+        end
+
         puts "#{temp} is offset value"
         token = Token.new(TokenType::OFFSET, temp.to_s)
         @tokens.push(token)
@@ -38,17 +43,23 @@ class Parser
 
       if command.match(/ADD|LDR|STR|SUB/)
         binary_command = set_registers(binary_command, registers)
-      elsif command.match(/MOV|B/)
+      elsif command.match(/MOVW|MOVT/)
         first_chunck = offset[0..3]
         puts "First chunck is #{first_chunck}"
         binary_command << first_chunck
         offset[0..3] = ''
         binary_command = set_registers(binary_command, registers)
         puts "Final Offset is #{offset}"
+      elsif command.match(/MOVR/)
+        register_temp = convert_register_to_binary registers[0]
+        binary_command << register_temp
+        binary_command << '00000000'
+        register_temp = convert_register_to_binary registers[1]
+        binary_command << register_temp
 
       end
 
-      binary_command << offset
+      binary_command << offset unless command.match(/MOVR/)
 
       puts "Binary representation #{binary_command}"
 
@@ -94,6 +105,9 @@ class Parser
       result = '00110000'
     elsif command.match(/MOVT/)
       result = '00110100'
+    elsif command.match(/MOVR/)
+      s_bit = command.match(/S/)? 1 : 0
+      result = "0001101#{s_bit}0000"
     elsif command.match(/ADD/)
       s_bit = 0
       if command.match(/S/)
@@ -116,6 +130,9 @@ class Parser
       s_bit = command.match(/S/) ? 1 : 0
 
       result = "0010010#{s_bit}"
+
+    elsif command.match(/BL/)
+      result = '1011'
     elsif command.match(/B/)
       result = '1010'
     end
