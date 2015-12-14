@@ -14,20 +14,18 @@ STR R3, R2
 MOVT R4, 0x0002
 STRW R4, R13, 4
 BL delay
-LDRW R4, R13, -4
 ; End of delay
 ; Turn off light
 STR R5, R2
 ; This is the delay
-MOVT R4, 0x0010
+MOVT R4, 0x0040
 STRW R4, R13, 4
 BL  delay
-LDRW R4, R13, -4
 ; End of delay
 B AL loop
 delay: MOVW R4, 0
 ;MOVT R4, 0x0002
-LDR R4, R7
+LDRW R4, R13, -4
 SUBS R4, R4, 1
 B NE delay
 MOVR R15, R14
