@@ -1,0 +1,16 @@
+; Load first value
+MOVW R0, 0x1000
+MOVT R0, 0x3F20
+loop: MOVW R1, 0x48
+STR R0, R1
+MOVW R1, 0x49
+STR R0, R1
+MOVW R1, 0x20
+STR R0, R1
+BL delay
+B AL loop
+delay: MOVW R4, 0
+MOVT R4, 0x0008
+pause: SUBS R4, R4, 1
+B NE pause
+MOVR R15, R14

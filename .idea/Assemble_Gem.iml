@@ -27,7 +27,7 @@
       </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
       <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/lib/Assemble_Gem.rb" />
-      <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="&quot;$MODULE_DIR$/lib/kernel.src&quot;" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="&quot;$MODULE_DIR$/lib/kernel.hi.src&quot;" />
       <method />
     </configuration>
     <configuration default="false" name="test" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">

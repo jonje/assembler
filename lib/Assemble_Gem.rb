@@ -32,6 +32,8 @@ module AssembleGem
 
   end
 
+  binary.each {|string| puts string}
+
   binary.each do |string|
     split = string.scan(/.{4}/)
     hex = ''
@@ -44,6 +46,7 @@ module AssembleGem
   hexs.each do |binary|
     puts binary
   end
+
 
   puts 'Writing to file'
   File.open(File.expand_path('~') + '/Desktop/kernel7.txt', 'wb') do |file|

@@ -26,10 +26,10 @@ class Parser
       if label_exists?
         label_value = get_label.value
         temp = label_value - @command_number
-        if temp > 0
-          temp -= 1
-        end
-
+        # if temp > 0
+        #   temp -= 2
+        # end
+        temp -= 2
         puts "#{temp} is offset value"
         token = Token.new(TokenType::OFFSET, temp.to_s)
         @tokens.push(token)
